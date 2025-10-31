@@ -17,42 +17,48 @@ namespace LegacyLibrary
         private const double HECTARES_TO_ACRES = 2.47105;
         private const double ACRES_TO_HECTARES = 0.404686;
 
-        public double ToRadians(double deg)
+        public double ConvertDegreesToRadians(double degrees)
         {
-            return deg * DEGREES_TO_RADIANS;
+            return degrees * DEGREES_TO_RADIANS;
         }
 
-        public double GetDistance(double lat1, double lon1, double lat2, double lon2)
+        public double CalculateDistanceBetweenPoints(double startLatitude, double startLongitude,
+                                                   double endLatitude, double endLongitude)
         {
-            double rlat1 = lat1 * DEGREES_TO_RADIANS;
-            double rlon1 = lon1 * DEGREES_TO_RADIANS;
-            double rlat2 = lat2 * DEGREES_TO_RADIANS;
-            double rlon2 = lon2 * DEGREES_TO_RADIANS;
+            double startLatRadians = startLatitude * DEGREES_TO_RADIANS;
+            double startLonRadians = startLongitude * DEGREES_TO_RADIANS;
+            double endLatRadians = endLatitude * DEGREES_TO_RADIANS;
+            double endLonRadians = endLongitude * DEGREES_TO_RADIANS;
 
-            double dlat = rlat2 - rlat1;
-            double dlon = rlon2 - rlon1;
-            double a = Math.Sin(dlat / 2) * Math.Sin(dlat / 2) +
-                      Math.Cos(rlat1) * Math.Cos(rlat2) *
-                      Math.Sin(dlon / 2) * Math.Sin(dlon / 2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double latitudeDifference = endLatRadians - startLatRadians;
+            double longitudeDifference = endLonRadians - startLonRadians;
 
-            return EARTH_RADIUS_KM * c;
+            double haversineComponent = Math.Sin(latitudeDifference / 2) * Math.Sin(latitudeDifference / 2) +
+                                      Math.Cos(startLatRadians) * Math.Cos(endLatRadians) *
+                                      Math.Sin(longitudeDifference / 2) * Math.Sin(longitudeDifference / 2);
+
+            double angularDistance = 2 * Math.Atan2(Math.Sqrt(haversineComponent),
+                                                   Math.Sqrt(1 - haversineComponent));
+
+            return EARTH_RADIUS_KM * angularDistance;
         }
 
-        public double GetAzimuth(double lat1, double lon1, double lat2, double lon2)
+        public double CalculateBearing(double startLatitude, double startLongitude,
+                                     double endLatitude, double endLongitude)
         {
-            double rlat1 = ToRadians(lat1);
-            double rlon1 = ToRadians(lon1);
-            double rlat2 = ToRadians(lat2);
-            double rlon2 = ToRadians(lon2);
+            double startLatRadians = ConvertDegreesToRadians(startLatitude);
+            double startLonRadians = ConvertDegreesToRadians(startLongitude);
+            double endLatRadians = ConvertDegreesToRadians(endLatitude);
+            double endLonRadians = ConvertDegreesToRadians(endLongitude);
 
-            double dlon = rlon2 - rlon1;
-            double y = Math.Sin(dlon) * Math.Cos(rlat2);
-            double x = Math.Cos(rlat1) * Math.Sin(rlat2) -
-                      Math.Sin(rlat1) * Math.Cos(rlat2) * Math.Cos(dlon);
+            double longitudeDifference = endLonRadians - startLonRadians;
+            double yComponent = Math.Sin(longitudeDifference) * Math.Cos(endLatRadians);
+            double xComponent = Math.Cos(startLatRadians) * Math.Sin(endLatRadians) -
+                              Math.Sin(startLatRadians) * Math.Cos(endLatRadians) *
+                              Math.Cos(longitudeDifference);
 
-            double azimuthRadians = Math.Atan2(y, x);
-            return (azimuthRadians * RADIANS_TO_DEGREES + 360) % 360;
+            double bearingRadians = Math.Atan2(yComponent, xComponent);
+            return (bearingRadians * RADIANS_TO_DEGREES + 360) % 360;
         }
 
         public double KmToMiles(double km) => km * KM_TO_MILES;
