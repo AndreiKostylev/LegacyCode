@@ -157,10 +157,7 @@ namespace GeoLibrary.Client
             {
                 Console.WriteLine($"  Ошибка: {ex.Message}");
             }
-
             Console.WriteLine();
         }
-
-        
     }
 }
