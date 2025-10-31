@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace LegacyLibrary
 {
-    internal interface IGeoCalculator
+    public interface IGeoCalculator
     {
+        double CalculateDistanceBetweenPoints(double startLatitude, double startLongitude,
+                                            double endLatitude, double endLongitude);
+        double CalculateBearing(double startLatitude, double startLongitude,
+                              double endLatitude, double endLongitude);
+        double ConvertDegreesToRadians(double degrees);
     }
 }

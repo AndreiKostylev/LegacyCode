@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace LegacyLibrary
 {
-    internal interface ILengthConverter
+    public interface ILengthConverter
     {
+        double ConvertKilometersToMiles(double kilometers);
+        double ConvertMilesToKilometers(double miles);
+        double ConvertMetersToFeet(double meters);
+        double ConvertFeetToMeters(double feet);
     }
 }

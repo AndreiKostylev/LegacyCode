@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LegacyLibrary
 {
-    internal interface IUniversalConverter
+    public interface IUniversalConverter
     {
+        double Convert(string fromUnit, string toUnit, double value);
     }
 }

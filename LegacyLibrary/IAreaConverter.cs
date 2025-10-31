@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace LegacyLibrary
 {
-    internal interface IAreaConverter
+    public interface IAreaConverter
     {
+        double ConvertHectaresToAcres(double hectares);
+        double ConvertAcresToHectares(double acres);
     }
 }
